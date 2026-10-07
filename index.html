@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LocalFix</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    background:#eef2f6;
+    color:#17202a;
+}
+
+.app{
+    max-width:480px;
+    min-height:100vh;
+    margin:auto;
+    background:#fff;
+    position:relative;
+    padding-bottom:70px;
+}
+
+/* HEADER */
+
+header{
+    background:#1769e0;
+    color:white;
+    padding:24px 18px;
+    border-radius:0 0 25px 25px;
+}
+
+.logo{
+    font-size:29px;
+    font-weight:bold;
+}
+
+.tagline{
+    margin-top:5px;
+    font-size:14px;
+}
+
+.location{
+    margin-top:17px;
+    background:rgba(255,255,255,.18);
+    padding:12px;
+    border-radius:10px;
+}
+
+/* COMMON */
+
+.screen{
+    display:none;
+}
+
+.screen.active{
+    display:block;
+}
+
+section{
+    padding:20px 16px;
+}
+
+h2{
+    font-size:21px;
+    margin-bottom:16px;
+}
+
+.small{
+    font-size:13px;
+    color:#68717b;
+}
+
+/* SERVICES */
+
+.services{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+}
+
+.service{
+    padding:20px 10px;
+    border:1px solid #e0e4e8;
+    border-radius:16px;
+    text-align:center;
+    cursor:pointer;
+    background:white;
+    transition:.2s;
+}
+
+.service:hover{
+    transform:translateY(-3px);
+    box-shadow:0 5px 15px rgba(0,0,0,.10);
+}
+
+.icon{
+    font-size:34px;
+}
+
+.service b{
+    display:block;
+    margin-top:8px;
+    margin-bottom:5px;
+}
+
+/* CARDS */
+
+.card{
+    border:1px solid #e0e4e8;
+    border-radius:15px;
+    padding:16px;
+    margin-bottom:12px;
+}
+
+.info-card{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+/* FORM */
+
+label{
+    display:block;
+    font-weight:bold;
+    font-size:14px;
+    margin-top:8px;
+}
+
+input,
+textarea,
+select{
+    width:100%;
+    padding:13px;
+    margin-top:7px;
+    margin-bottom:14px;
+    border:1px solid #ccd2d9;
+    border-radius:10px;
+    font-size:15px;
+}
+
+textarea{
+    height:90px;
+    resize:none;
+}
+
+button{
+    border:none;
+    background:#1769e0;
+    color:white;
+    padding:12px 18px;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:active{
+    transform:scale(.97);
+}
+
+.secondary{
+    background:#6b7280;
+}
+
+.full{
+    width:100%;
+}
+
+/* PRICE */
+
+.price{
+    color:#1769e0;
+    font-size:21px;
+    font-weight:bold;
+    margin:12px 0 18px;
+}
+
+/* WORKERS */
+
+.worker{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:10px;
+}
+
+.worker-name{
+    font-weight:bold;
+    font-size:16px;
+}
+
+.badge{
+    display:inline-block;
+    background:#e8f7ed;
+    color:#15803d;
+    padding:5px 8px;
+    border-radius:7px;
+    font-size:12px;
+    margin-top:5px;
+}
+
+/* SUCCESS */
+
+.success{
+    text-align:center;
+    padding-top:45px;
+}
+
+.success-icon{
+    font-size:65px;
+    margin-bottom:15px;
+}
+
+/* PROFILE */
+
+.profile-head{
+    text-align:center;
+    padding:25px 0;
+}
+
+.avatar{
+    width:80px;
+    height:80px;
+    border-radius:50%;
+    background:#1769e0;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:35px;
+    margin:0 auto 12px;
+}
+
+/* BOOKINGS */
+
+.empty{
+    text-align:center;
+    padding:60px 20px;
+}
+
+.empty-icon{
+    font-size:60px;
+    margin-bottom:15px;
+}
+
+/* NAVIGATION */
+
+.bottom-nav{
+    position:fixed;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    width:100%;
+    max-width:480px;
+    height:68px;
+    background:white;
+    border-top:1px solid #ddd;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    z-index:100;
+}
+
+.nav-btn{
+    background:white;
+    color:#68717b;
+    padding:8px 15px;
+    font-size:12px;
+}
+
+.nav-btn.active{
+    color:#1769e0;
+}
+
+.nav-icon{
+    display:block;
+    font-size:21px;
+    margin-bottom:2px;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:85px;
+    transform:translateX(-50%);
+    background:#17202a;
+    color:white;
+    padding:12px 18px;
+    border-radius:10px;
+    display:none;
+    z-index:200;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- HEADER -->
+
+<header>
+
+<div class="logo">🔧 LocalFix</div>
+
+<div class="tagline">
+Trusted local services at your doorstep
+</div>
+
+<div class="location">
+📍 Lucknow, Uttar Pradesh
+</div>
+
+</header>
+
+
+<!-- ================= HOME ================= -->
+
+<div id="homeScreen" class="screen active">
+
+<section>
+
+<h2>What service do you need?</h2>
+
+<div class="services">
+
+<div class="service"
+onclick="openBooking('Electrician','⚡',499)">
+<div class="icon">⚡</div>
+<b>Electrician</b>
+<span class="small">From ₹499</span>
+</div>
+
+<div class="service"
+onclick="openBooking('Plumber','🔧',399)">
+<div class="icon">🔧</div>
+<b>Plumber</b>
+<span class="small">From ₹399</span>
+</div>
+
+<div class="service"
+onclick="openBooking('AC Repair','❄️',599)">
+<div class="icon">❄️</div>
+<b>AC Repair</b>
+<span class="small">From ₹599</span>
+</div>
+
+<div class="service"
+onclick="openBooking('RO Repair','💧',449)">
+<div class="icon">💧</div>
+<b>RO Repair</b>
+<span class="small">From ₹449</span>
+</div>
+
+<div class="service"
+onclick="openBooking('Cleaning','🧹',699)">
+<div class="icon">🧹</div>
+<b>Cleaning</b>
+<span class="small">From ₹699</span>
+</div>
+
+<div class="service"
+onclick="openBooking('Appliance Repair','🛠️',499)">
+<div class="icon">🛠️</div>
+<b>Appliance Repair</b>
+<span class="small">From ₹499</span>
+</div>
+
+</div>
+
+</section>
+
+
+<section>
+
+<h2>How LocalFix Works</h2>
+
+<div class="card">
+🔎 <b>Choose a Service</b>
+<br>
+<span class="small">
+Select the service you need.
+</span>
+</div>
+
+<div class="card">
+👨‍🔧 <b>Choose Professional</b>
+<br>
+<span class="small">
+Select a nearby verified worker.
+</span>
+</div>
+
+<div class="card">
+📅 <b>Book Service</b>
+<br>
+<span class="small">
+Choose your preferred date and time.
+</span>
+</div>
+
+<div class="card">
+⭐ <b>Rate Service</b>
+<br>
+<span class="small">
+Rate your professional after service.
+</span>
+</div>
+
+</section>
+
+</div>
+
+
+<!-- ================= BOOKING ================= -->
+
+<div id="bookingScreen" class="screen">
+
+<section>
+
+<h2 id="bookingTitle">
+Book Service
+</h2>
+
+<label>Describe your problem</label>
+
+<textarea
+id="problem"
+placeholder="Example: Fan is not working">
+</textarea>
+
+<label>Your Address</label>
+
+<input
+id="address"
+type="text"
+placeholder="House No., Street, Area">
+
+<label>Preferred Date</label>
+
+<input
+id="date"
+type="date">
+
+<label>Preferred Time</label>
+
+<select id="time">
+
+<option>9 AM - 12 PM</option>
+<option>12 PM - 3 PM</option>
+<option>3 PM - 6 PM</option>
+<option>6 PM - 9 PM</option>
+
+</select>
+
+<div class="price">
+
+Estimated Price:
+₹<span id="bookingPrice">499</span>
+
+</div>
+
+<button class="full"
+onclick="findProfessionals()">
+
+Find Professionals
+
+</button>
+
+<br><br>
+
+<button class="secondary full"
+onclick="showScreen('homeScreen')">
+
+← Back to Home
+
+</button>
+
+</section>
+
+</div>
+
+
+<!-- ================= PROFESSIONALS ================= -->
+
+<div id="workersScreen" class="screen">
+
+<section>
+
+<h2>Available Professionals</h2>
+
+<p class="small">
+Verified professionals near your location
+</p>
+
+<br>
+
+<div id="workerList"></div>
+
+<button class="secondary full"
+onclick="showScreen('bookingScreen')">
+
+← Back
+
+</button>
+
+</section>
+
+</div>
+
+
+<!-- ================= CONFIRMATION ================= -->
+
+<div id="confirmationScreen" class="screen">
+
+<section class="success">
+
+<div class="success-icon">
+✅
+</div>
+
+<h2>Booking Confirmed!</h2>
+
+<p class="small">
+Your LocalFix service request has been successfully booked.
+</p>
+
+<br>
+
+<div class="card">
+
+<p>
+<b>Service:</b>
+<span id="confirmService"></span>
+</p>
+
+<br>
+
+<p>
+<b>Professional:</b>
+<span id="confirmWorker"></span>
+</p>
+
+<br>
+
+<p>
+<b>Price:</b>
+₹<span id="confirmPrice"></span>
+</p>
+
+<br>
+
+<p>
+<b>Status:</b>
+<span class="badge">
+Confirmed
+</span>
+</p>
+
+</div>
+
+<button class="full"
+onclick="showScreen('homeScreen')">
+
+Go to Home
+
+</button>
+
+</section>
+
+</div>
+
+
+<!-- ================= BOOKINGS ================= -->
+
+<div id="bookingsScreen" class="screen">
+
+<section>
+
+<h2>📦 My Bookings</h2>
+
+<div id="bookingContent">
+
+<div class="empty">
+
+<div class="empty-icon">
+📦
+</div>
+
+<h3>No bookings yet</h3>
+
+<br>
+
+<p class="small">
+Your LocalFix bookings will appear here.
+</p>
+
+<br>
+
+<button onclick="showScreen('homeScreen')">
+Book a Service
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+
+
+<!-- ================= PROFILE ================= -->
+
+<div id="profileScreen" class="screen">
+
+<section>
+
+<div class="profile-head">
+
+<div class="avatar">
+👤
+</div>
+
+<h2>Aditya</h2>
+
+<p class="small">
+LocalFix Customer
+</p>
+
+</div>
+
+
+<div class="card">
+👤 <b>Personal Information</b>
+<br><br>
+<span class="small">
+Name: Aditya
+</span>
+<br>
+<span class="small">
+Location: Lucknow
+</span>
+</div>
+
+
+<div class="card">
+📍 <b>Saved Address</b>
+<br><br>
+<span class="small">
+No saved address
+</span>
+</div>
+
+
+<div class="card">
+⭐ <b>My Ratings</b>
+<br><br>
+<span class="small">
+No ratings yet
+</span>
+</div>
+
+
+<div class="card">
+⚙️ <b>Settings</b>
+<br><br>
+<span class="small">
+Notifications • Privacy • Help
+</span>
+</div>
+
+<button class="full"
+onclick="showToast('Profile settings coming soon!')">
+
+Edit Profile
+
+</button>
+
+</section>
+
+</div>
+
+
+<!-- ================= BOTTOM NAV ================= -->
+
+<div class="bottom-nav">
+
+<button
+id="homeNav"
+class="nav-btn active"
+onclick="showScreen('homeScreen')">
+
+<span class="nav-icon">🏠</span>
+Home
+
+</button>
+
+
+<button
+id="bookingNav"
+class="nav-btn"
+onclick="showScreen('bookingsScreen')">
+
+<span class="nav-icon">📦</span>
+Bookings
+
+</button>
+
+
+<button
+id="profileNav"
+class="nav-btn"
+onclick="showScreen('profileScreen')">
+
+<span class="nav-icon">👤</span>
+Profile
+
+</button>
+
+</div>
+
+
+<div id="toast" class="toast"></div>
+
+</div>
+
+
+<script>
+
+/* VARIABLES */
+
+let selectedService = "";
+let selectedIcon = "";
+let selectedPrice = 0;
+
+
+/* SCREEN NAVIGATION */
+
+function showScreen(screenId){
+
+let screens = document.querySelectorAll(".screen");
+
+screens.forEach(function(screen){
+
+screen.classList.remove("active");
+
+});
+
+
+document.getElementById(screenId)
+.classList.add("active");
+
+
+/* NAV ACTIVE */
+
+document.querySelectorAll(".nav-btn")
+.forEach(function(btn){
+
+btn.classList.remove("active");
+
+});
+
+
+if(screenId === "homeScreen"){
+
+document.getElementById("homeNav")
+.classList.add("active");
+
+}
+
+else if(screenId === "bookingsScreen"){
+
+document.getElementById("bookingNav")
+.classList.add("active");
+
+}
+
+else if(screenId === "profileScreen"){
+
+document.getElementById("profileNav")
+.classList.add("active");
+
+}
+
+
+/* SCROLL TOP */
+
+window.scrollTo(
+{
+top:0,
+behavior:"smooth"
+});
+
+}
+/* LOAD SERVICES FROM BACKEND */
+
+async function loadServices() {
+
+    try {
+
+        const response = await fetch("http://localhost:5000/api/services");
+
+        const data = await response.json();
+
+        console.log("Services received from backend:", data);
+
+    } catch (error) {
+
+        console.error("Backend connection error:", error);
+
+    }
+
+}
+
+
+/* START LOADING SERVICES */
+
+loadServices();
+
+/* OPEN BOOKING */
+
+function openBooking(service,icon,price){
+
+selectedService = service;
+
+selectedIcon = icon;
+
+selectedPrice = price;
+
+
+document.getElementById("bookingTitle")
+.innerText =
+icon + " Book " + service;
+
+
+document.getElementById("bookingPrice")
+.innerText =
+price;
+
+
+showScreen("bookingScreen");
+
+}
+
+
+/* FIND PROFESSIONALS */
+
+function findProfessionals(){
+
+let problem =
+document.getElementById("problem").value.trim();
+
+let address =
+document.getElementById("address").value.trim();
+
+
+if(problem === ""){
+
+showToast("Please describe your problem.");
+
+return;
+
+}
+
+
+if(address === ""){
+
+showToast("Please enter your address.");
+
+return;
+
+}
+
+
+let workers = [
+
+{
+name:"Rahul Kumar",
+rating:"⭐ 4.9",
+distance:"2.4 km",
+price:selectedPrice
+},
+
+{
+name:"Amit Verma",
+rating:"⭐ 4.8",
+distance:"3.1 km",
+price:selectedPrice + 100
+},
+
+{
+name:"Sandeep Singh",
+rating:"⭐ 4.7",
+distance:"4.0 km",
+price:selectedPrice
+}
+
+];
+
+
+let html = "";
+
+
+workers.forEach(function(worker){
+
+html += `
+
+<div class="card worker">
+
+<div>
+
+<div class="worker-name">
+👨‍🔧 ${worker.name}
+</div>
+
+<span class="small">
+${worker.rating} • ${worker.distance}
+</span>
+
+<br>
+
+<span class="small">
+${selectedService} Specialist
+</span>
+
+</div>
+
+
+<div style="text-align:right">
+
+<b>₹${worker.price}</b>
+
+<br><br>
+
+<button
+onclick="confirmBooking('${worker.name}',${worker.price})">
+
+Book
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+document.getElementById("workerList")
+.innerHTML = html;
+
+
+showScreen("workersScreen");
+
+}
+
+
+/* CONFIRM BOOKING */
+
+function confirmBooking(worker,price){
+
+document.getElementById("confirmService")
+.innerText = selectedService;
+
+
+document.getElementById("confirmWorker")
+.innerText = worker;
+
+
+document.getElementById("confirmPrice")
+.innerText = price;
+
+
+showScreen("confirmationScreen");
+
+
+/* UPDATE BOOKINGS */
+
+document.getElementById("bookingContent")
+.innerHTML = `
+
+<div class="card">
+
+<div class="worker">
+
+<div>
+
+<b>${selectedIcon} ${selectedService}</b>
+
+<br>
+
+<span class="small">
+Professional: ${worker}
+</span>
+
+<br>
+
+<span class="small">
+Status: Confirmed
+</span>
+
+</div>
+
+<div>
+
+<b>₹${price}</b>
+
+</div>
+
+</div>
+
+<br>
+
+<span class="badge">
+Confirmed
+</span>
+
+</div>
+
+`;
+
+}
+
+
+/* TOAST */
+
+function showToast(message){
+
+let toast =
+document.getElementById("toast");
+
+toast.innerText = message;
+
+toast.style.display = "block";
+
+
+setTimeout(function(){
+
+toast.style.display = "none";
+
+},2500);
+
+}
+
+</script>
+
+</body>
+</html>
